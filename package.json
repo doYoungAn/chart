@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "example-dev": "webpack-dev-server --config ./example/webpack.config.js",
+    "build": "tsc lib/index.ts"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,21 @@
   "bugs": {
     "url": "https://github.com/doYoungAn/chart/issues"
   },
-  "homepage": "https://github.com/doYoungAn/chart#readme"
+  "homepage": "https://github.com/doYoungAn/chart#readme",
+  "devDependencies": {
+    "@types/d3": "^5.7.2",
+    "@types/react": "^16.9.17",
+    "@types/react-dom": "^16.9.4",
+    "html-webpack-plugin": "^3.2.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.7.4",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
+  },
+  "dependencies": {
+    "d3": "^5.15.0"
+  }
 }
