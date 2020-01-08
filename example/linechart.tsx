@@ -44,14 +44,15 @@ const Linechart: FC<ILinechartProps> = () => {
           ]
         },
       ],
-      lineDot: true
+      lineDot: true,
+      guideline: true
     };
     d3Extend.Linechart(config);
   }, []);
 
   return (
     <>
-      <div style={{ width: 500, height: 500 }} ref={wrapper}></div>
+      <div style={{ width: 1000, height: 700 }} ref={wrapper}></div>
     </>
   );
 

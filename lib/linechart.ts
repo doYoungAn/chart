@@ -25,6 +25,7 @@ export interface ILinechartConfig {
   dataObjs: ILinechartDataObj[];
   margin?: IChartMargin;
   lineDot?: boolean;
+  guideline?: boolean;
 }
 
 const Margin: IChartMargin = {
@@ -34,12 +35,12 @@ const Margin: IChartMargin = {
   left: 50
 };
 
-const lineBaseStrokWidth: number    = 4;
-const lineStrongStrokWidth: number  = 5;
-const lineBaseOpacity: number       = 0.5;
-const lineStrongOpacity: number     = 1;
-const circleBaseR: number           = 6;
-const circleStrongR: number         = 7;
+const lineBaseStrokWidth: number    = 5;
+const lineStrongStrokWidth: number  = 6;
+const circleBaseR: number           = 7;
+const circleStrongR: number         = 8;
+const baseOpacity: number           = 0.5;
+const strongOpacity: number         = 1;
 
 const Linechart = (config: ILinechartConfig) => {
 
@@ -49,7 +50,8 @@ const Linechart = (config: ILinechartConfig) => {
     xRange,
     dataObjs,
     margin = Margin,
-    lineDot = true
+    lineDot = true,
+    guideline = true
   } = config;
 
   const width: number = element.clientWidth - margin.right - margin.left;
@@ -83,12 +85,32 @@ const Linechart = (config: ILinechartConfig) => {
     .attr('transform', `translate(0, ${height})`)
     .call(xAxis)
 
+  // 가이드 라인 그리기
+  if (guideline) {
+    const guidelineX = d3.axisBottom(xScale);
+    const guidelineY = d3.axisLeft(yScaleLeft);
+    svg
+      .append('g')
+      .attr('stroke-opacity', 0.5)
+      .attr('transform', `translate(0, ${height})`)
+      .call(guidelineX.tickSize(-height).tickFormat('' as any))
+      .selectAll('line')
+      .attr('stroke', '#BDBDBD');
+    svg
+      .append('g')
+      .attr('stroke-opacity', 0.5)
+      .call(guidelineY.tickSize(-width).tickFormat('' as any))
+      .selectAll('line')
+      .attr('stroke', '#BDBDBD')
+  }
+
   const line = d3.line()
     .x((d: any) => xScale(d.date))
     .y((d: any) => yScaleLeft(d.value))
     .curve(d3.curveMonotoneX)
 
   const lineEls: d3.Selection<SVGPathElement, ILinechartData[], null, undefined>[] = [];
+  const dotEls: d3.Selection<SVGCircleElement, ILinechartData, SVGElement, unknown>[] = [];
 
   dataObjs.forEach((dataObj) => {
     // 데이터로 그린 라인
@@ -103,14 +125,17 @@ const Linechart = (config: ILinechartConfig) => {
     lineEl
       .on('mouseover', () => {
         lineEl.attr('stroke-width', lineStrongStrokWidth);
-        lineEls.forEach((line) => line.attr('opacity', lineBaseOpacity));
-        lineEl.attr('opacity', lineStrongOpacity);
+        lineEls.forEach((line) => line.attr('opacity', baseOpacity));
+        lineEl.attr('opacity', strongOpacity);
         dotEl ? dotEl.attr('r', circleStrongR) : void 0;
+        dotEls.forEach((dot) => dot.attr('opacity', baseOpacity));
+        dotEl ? dotEl.attr('opacity', strongOpacity) : void 0;
       })
       .on('mouseleave', () => {
         lineEl.attr('stroke-width', lineBaseStrokWidth);
-        lineEls.forEach((line) => line.attr('opacity', lineStrongOpacity));
+        lineEls.forEach((line) => line.attr('opacity', strongOpacity));
         dotEl ? dotEl.attr('r', circleBaseR) : void 0;
+        dotEls.forEach((dot) => dot.attr('opacity', strongOpacity));
       });
     
     lineEls.push(lineEl);
@@ -129,13 +154,21 @@ const Linechart = (config: ILinechartConfig) => {
     // 점에 이벤트 걸기
     dotEl
       .on('mouseover', () => {
+        lineEls.forEach((line) => line.attr('opacity', baseOpacity))
         lineEl.attr('stroke-width', lineStrongStrokWidth);
+        lineEl.attr('opacity', strongOpacity);
+        dotEls.forEach((dot) => dot.attr('opacity', baseOpacity));
         dotEl.attr('r', circleStrongR);
+        dotEl.attr('opacity', strongOpacity);
       })
       .on('mouseleave', () => {
         lineEl.attr('stroke-width', lineBaseStrokWidth);
+        lineEls.forEach((line) => line.attr('opacity', strongOpacity));
         dotEl.attr('r', circleBaseR);
+        dotEls.forEach((dot) => dot.attr('opacity', strongOpacity));
       });
+
+    dotEls.push(dotEl);
   });
   
   return svg;
