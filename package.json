@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "example-dev": "webpack-dev-server --config ./example/webpack.config.js",
-    "build": "tsc lib/index.ts"
+    "build": "tsc --build tsconfig.lib.json"
   },
   "repository": {
     "type": "git",

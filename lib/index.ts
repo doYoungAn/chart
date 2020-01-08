@@ -1,6 +1,8 @@
-import * as d3 from 'd3';
+import Linechart from './linechart';
+export { ILinechartConfig } from './linechart';
+import Timeline from './timeline';
 
-const Linechart = (ele: HTMLElement) => {
-  d3.select(ele)
-    .append('svg')
+export default {
+  Linechart,
+  Timeline
 }

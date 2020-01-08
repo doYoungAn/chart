@@ -1,4 +1,5 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect } from 'react';
+import Linechart from './linechart';
 
 interface IAppProps {}
 
@@ -6,9 +7,7 @@ const App: FC<IAppProps> = (): JSX.Element => {
 
   return (
     <>
-      <div>
-        asdasd
-      </div>
+      <Linechart />
     </>
   );
 
