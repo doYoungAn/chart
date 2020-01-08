@@ -1,5 +1,6 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import Linechart from './linechart';
+import Timeline from './timeline';
 
 interface IAppProps {}
 
@@ -7,7 +8,10 @@ const App: FC<IAppProps> = (): JSX.Element => {
 
   return (
     <>
-      <Linechart />
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Linechart />
+        <Timeline />
+      </div>
     </>
   );
 

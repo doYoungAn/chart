@@ -45,14 +45,17 @@ const Linechart: FC<ILinechartProps> = () => {
         },
       ],
       lineDot: true,
-      guideline: true
+      guideline: false,
+      lineStrokWidth: 5
     };
     d3Extend.Linechart(config);
   }, []);
 
   return (
     <>
-      <div style={{ width: 1000, height: 700 }} ref={wrapper}></div>
+    <div className="card" style={{ width: '49%' }}>
+      <div style={{ width: '100%', height: 600 }} ref={wrapper}></div>
+    </div>
     </>
   );
 

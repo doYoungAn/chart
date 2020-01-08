@@ -26,6 +26,7 @@ export interface ILinechartConfig {
   margin?: IChartMargin;
   lineDot?: boolean;
   guideline?: boolean;
+  lineStrokWidth?: number;
 }
 
 const Margin: IChartMargin = {
@@ -35,10 +36,6 @@ const Margin: IChartMargin = {
   left: 50
 };
 
-const lineBaseStrokWidth: number    = 5;
-const lineStrongStrokWidth: number  = 6;
-const circleBaseR: number           = 7;
-const circleStrongR: number         = 8;
 const baseOpacity: number           = 0.5;
 const strongOpacity: number         = 1;
 
@@ -51,11 +48,16 @@ const Linechart = (config: ILinechartConfig) => {
     dataObjs,
     margin = Margin,
     lineDot = true,
-    guideline = true
+    guideline = true,
+    lineStrokWidth = 3
   } = config;
 
   const width: number = element.clientWidth - margin.right - margin.left;
   const height: number = element.clientHeight - margin.top - margin.bottom;
+
+  const lineStrongStrokWidth: number  = lineStrokWidth * 1.5;
+  const circleBaseR: number           = lineStrokWidth * 1.7;
+  const circleStrongR: number         = lineStrokWidth * 1.9;
   
   // 차트 부모 svg
   const svg = d3.select(element)
@@ -118,7 +120,7 @@ const Linechart = (config: ILinechartConfig) => {
       .datum(dataObj.datas)
       .attr('stroke', dataObj.color)
       .attr('fill', 'none')
-      .attr('stroke-width', lineBaseStrokWidth)
+      .attr('stroke-width', lineStrokWidth)
       .attr('d', (line as any))
     
     // 라인에 이벤트 걸기
@@ -132,7 +134,7 @@ const Linechart = (config: ILinechartConfig) => {
         dotEl ? dotEl.attr('opacity', strongOpacity) : void 0;
       })
       .on('mouseleave', () => {
-        lineEl.attr('stroke-width', lineBaseStrokWidth);
+        lineEl.attr('stroke-width', lineStrokWidth);
         lineEls.forEach((line) => line.attr('opacity', strongOpacity));
         dotEl ? dotEl.attr('r', circleBaseR) : void 0;
         dotEls.forEach((dot) => dot.attr('opacity', strongOpacity));
@@ -162,7 +164,7 @@ const Linechart = (config: ILinechartConfig) => {
         dotEl.attr('opacity', strongOpacity);
       })
       .on('mouseleave', () => {
-        lineEl.attr('stroke-width', lineBaseStrokWidth);
+        lineEl.attr('stroke-width', lineStrokWidth);
         lineEls.forEach((line) => line.attr('opacity', strongOpacity));
         dotEl.attr('r', circleBaseR);
         dotEls.forEach((dot) => dot.attr('opacity', strongOpacity));
