@@ -10,7 +10,7 @@ const Timeline: FC<ITimelineProps> = (): JSX.Element => {
   useEffect(() => {
     const config: ITimelineConfig = {
       element: wrapper.current,
-      xRange: [new Date(2020, 0, 5), new Date()],
+      xRange: [new Date(2020, 0, 11), new Date()],
       dataObjs: [
         {
           name: 'aaa',
@@ -56,7 +56,7 @@ const Timeline: FC<ITimelineProps> = (): JSX.Element => {
       nameWidth: 100,
       nameColor: '#ffffff',
       gridColor: '#BDBDBD',
-      barHeight: 32,
+      barHeight: 30,
       barGap: 6
     };
     d3Extends.Timeline(config);

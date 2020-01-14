@@ -34,6 +34,16 @@ const Margin: IChartMargin = {
   left: 20
 };
 
+const getPercent = (dataObjs: ITimelineDataObj[], xRange: [Date, Date], d: string): number => {
+  const timeValue: number = dataObjs
+  .filter(obj => obj.name === d)
+  .map(obj => obj.end.valueOf() - obj.start.valueOf())
+  .reduce((prev, next) => prev + next, 0);
+const totalValue: number = xRange[1].valueOf() - xRange[0].valueOf();
+const percent: number = Math.floor(timeValue / totalValue * 100);
+return percent > 100 ? 100 : percent;
+}
+
 const Timeline = (config: ITimelineConfig) => {
   const {
     element,
@@ -49,6 +59,7 @@ const Timeline = (config: ITimelineConfig) => {
   } = config;
   const baseOpacity: number = 0.3;
   const strongOpacity: number = 0.6;
+  const percentWidth: number = 110;
   const width: number = element.clientWidth - margin.right - margin.left;
   const height: number = element.clientHeight - margin.top - margin.bottom;
   const rowHeight: number = barHeight + (2 * barGap);
@@ -66,6 +77,41 @@ const Timeline = (config: ITimelineConfig) => {
     .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
+
+  // 퍼센트 bar G
+  const percentRects = svg
+    .append('g')
+    .attr('transform', `translate(${margin.left + width - percentWidth}, ${margin.top})`)
+    .selectAll('rect')
+    .data(uniqueNames)
+    .enter()
+    .append('rect')
+    .attr('x', 10)
+    .attr('rx', 3)
+    .attr('ry', 3)
+    .attr('y', (d: string, i: number) => i * rowHeight + barGap)
+    .attr('width', 0)
+    .attr('height', barHeight)
+    .attr('opacity', 0.7)
+    .attr('fill', '#A5D6A7')
+  percentRects
+    .transition()
+    .duration(1000)
+    .attr('width', (d: string) => getPercent(dataObjs, xRange, d))
+  const percentTexts = svg
+    .append('g')
+    .attr('transform', `translate(${margin.left + width - percentWidth}, ${margin.top})`)
+    .selectAll('text')
+    .data(uniqueNames)
+    .enter()
+    .append('text')
+    .text((d: string) => `${getPercent(dataObjs, xRange, d)} %`)
+    .attr('x', (percentWidth / 2) - 8)
+    .attr('fill', '#ffffff')
+    .attr('y', (d: string, i: number) => i * rowHeight + rowHeight / 2 + 6)
+    .attr('height', rowHeight)
+    .attr('font-size', 14)
+  
   // 최상단 G
   const parentRects = svg.append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`)
@@ -75,7 +121,7 @@ const Timeline = (config: ITimelineConfig) => {
     .append('rect')
     .attr('y', (d: string, i: number) => i * rowHeight)
     .attr('height', rowHeight)
-    .attr('width', width)
+    .attr('width', width - percentWidth)
     .attr('opacity', baseOpacity)
     .attr('fill', (d: string) => colorScale(d) as string)
   // 부모 rect 이벤트 걸기
@@ -114,7 +160,7 @@ const Timeline = (config: ITimelineConfig) => {
 
   const xScale = d3.scaleTime()
     .domain(xRange)
-    .range([0, width - nameWidth])
+    .range([0, width - nameWidth - percentWidth])
 
   const xAxis = d3.axisBottom(xScale)
     .tickSize(rowHeight * uniqueNames.length)
@@ -122,7 +168,7 @@ const Timeline = (config: ITimelineConfig) => {
 
   const timeScale = d3.scaleTime()
     .domain(xRange)
-    .range([0, width - nameWidth])
+    .range([0, width - nameWidth - percentWidth])
 
   // 타임라인 보여준다
   const timeRectEls = svg.append('g')
