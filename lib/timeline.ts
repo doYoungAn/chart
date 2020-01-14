@@ -47,7 +47,8 @@ const Timeline = (config: ITimelineConfig) => {
     barGap = 4,
     margin = Margin
   } = config;
-
+  const baseOpacity: number = 0.3;
+  const strongOpacity: number = 0.6;
   const width: number = element.clientWidth - margin.right - margin.left;
   const height: number = element.clientHeight - margin.top - margin.bottom;
   const rowHeight: number = barHeight + (2 * barGap);
@@ -58,7 +59,7 @@ const Timeline = (config: ITimelineConfig) => {
     }, []);
   const colorScale = d3.scaleOrdinal()
     .domain(uniqueNames)
-    .range(d3.schemeSet3)
+    .range(d3.schemeSet3);
 
   // 최상단 부모
   const svg = d3.select(element)
@@ -66,7 +67,7 @@ const Timeline = (config: ITimelineConfig) => {
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
   // 최상단 G
-  const parentG = svg.append('g')
+  const parentRects = svg.append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`)
     .selectAll('rect')
     .data(uniqueNames)
@@ -75,21 +76,41 @@ const Timeline = (config: ITimelineConfig) => {
     .attr('y', (d: string, i: number) => i * rowHeight)
     .attr('height', rowHeight)
     .attr('width', width)
-    .attr('opacity', 0.3)
+    .attr('opacity', baseOpacity)
     .attr('fill', (d: string) => colorScale(d) as string)
+  // 부모 rect 이벤트 걸기
+  parentRects
+    .on('mouseover' , (d: string) => {
+      parentRects.attr('opacity', baseOpacity);
+      const targetRect = parentRects.filter((data) => data === d);
+      targetRect.attr('opacity', strongOpacity);
+    })
+    .on('mouseleave', (d: string) => {
+      parentRects.attr('opacity', baseOpacity);
+    });
   // 타이틀 G
-  const textG = svg.append('g')
+  const nameTextEls = svg.append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`)
     .selectAll('text')
     .data(uniqueNames)
     .enter()
     .append('text')
     .text((d: string) => d)
-    .attr('x', 5)
+    .attr('x', 4)
     .attr('y', (d: string, i: number) => i * rowHeight + rowHeight / 2 + 5)
     .attr('height', rowHeight)
     .attr('width', width)
-    .attr('fill', nameColor)
+    .attr('fill', nameColor);
+  // 타이틀 이벤트 걸기
+  nameTextEls
+    .on('mouseover', (d: string) => {
+      parentRects.attr('opacity', baseOpacity);
+      const targetRect = parentRects.filter((data) => data === d);
+      targetRect.attr('opacity', strongOpacity);
+    })
+    .on('mouseleave', (d: string) => {
+      parentRects.attr('opacity', baseOpacity);
+    });
 
   const xScale = d3.scaleTime()
     .domain(xRange)
@@ -104,7 +125,7 @@ const Timeline = (config: ITimelineConfig) => {
     .range([0, width - nameWidth])
 
   // 타임라인 보여준다
-  const timelineG = svg.append('g')
+  const timeRectEls = svg.append('g')
     .attr('transform', `translate(${margin.left}, ${margin.top})`)
     .selectAll('rect')
     .data(dataObjs)
@@ -113,19 +134,40 @@ const Timeline = (config: ITimelineConfig) => {
     .attr('rx', 3)
     .attr('ry', 3)
     .attr('x', (d: ITimelineDataObj) => {
+      const rangeStartPosition: number = timeScale(xRange[0]);
       const startPosition: number = timeScale(d.start);
-      return nameWidth + startPosition;
+      return nameWidth + (rangeStartPosition > startPosition ? rangeStartPosition : startPosition);
     })
     .attr('y', (d: ITimelineDataObj) => {
       return uniqueNames.indexOf(d.name) * rowHeight + barGap;
     })
-    .attr('width', (d: ITimelineDataObj) => {
-      const startPosition: number = timeScale(d.start);
-      const endPosition: number = timeScale(d.end);
-      return endPosition - startPosition;
-    })
+    .attr('width', 0)
     .attr('height', barHeight)
     .attr('fill', (d: ITimelineDataObj) => colorScale(d.name) as string)
+  
+  timeRectEls
+    .transition()
+    .duration(1000)
+    .attr('width', (d: ITimelineDataObj) => {
+      const rangeStartPosition: number = timeScale(xRange[0]);
+      const rangeEndPosition: number = timeScale(xRange[1]);
+      const startPosition: number = timeScale(d.start);
+      const endPosition: number = timeScale(d.end);
+      const fullWidth: number = rangeEndPosition - rangeStartPosition;
+      const timeWidth: number = endPosition - startPosition;
+      return fullWidth < timeWidth ? fullWidth : timeWidth;
+    });
+
+  // 타임라인 막대 이벤트
+  timeRectEls
+    .on('mouseover', (d: ITimelineDataObj) => {
+      parentRects.attr('opacity', baseOpacity);
+      const targetRect = parentRects.filter((data) => data === d.name);
+      targetRect.attr('opacity', strongOpacity);
+    })
+    .on('mouseleave', (d) => {
+      parentRects.attr('opacity', baseOpacity);
+    });
 
 
     // x 그리드
