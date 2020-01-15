@@ -15,7 +15,14 @@ interface ILinechartData {
 
 interface ILinechartDataObj {
   color: string;
+  name: string;
   datas: ILinechartData[]
+}
+
+interface ILinechartLegend {
+  type: 'left' | 'right';
+  width: number;
+  color: string;
 }
 
 export interface ILinechartConfig {
@@ -27,6 +34,7 @@ export interface ILinechartConfig {
   lineDot?: boolean;
   guideline?: boolean;
   lineStrokWidth?: number;
+  legend?: ILinechartLegend;
 }
 
 const Margin: IChartMargin = {
@@ -39,6 +47,30 @@ const Margin: IChartMargin = {
 const baseOpacity: number           = 0.5;
 const strongOpacity: number         = 1;
 
+const yScaleTransform = (legend: ILinechartLegend): string => {
+  if (legend === undefined) return ``;
+  if (legend.type === 'left') return `translate(${legend.width}, 0)`;
+  if (legend.type === 'right') return ``;
+}
+
+const xScaleStartPosition = (legend: ILinechartLegend): number => {
+  if (legend === undefined) return 0;
+  if (legend.type === 'left') return legend.width;
+  if (legend.type === 'right') return 0;
+}
+
+const xScaleEndPosition = (legend: ILinechartLegend, width: number): number => {
+  if (legend === undefined) return width;
+  if (legend.type === 'left') return width;
+  if (legend.type === 'right') return width - legend.width;
+}
+
+const legendTransform = (legend: ILinechartLegend, width: number, height: number): string => {
+  if (legend === undefined) return ``;
+  if (legend.type === 'left') return `translate(${0}, ${height / 2})`;
+  if (legend.type === 'right') return `translate(${width - legend.width + 20}, ${height / 2})`;
+}
+
 const Linechart = (config: ILinechartConfig) => {
 
   const {
@@ -49,7 +81,8 @@ const Linechart = (config: ILinechartConfig) => {
     margin = Margin,
     lineDot = true,
     guideline = true,
-    lineStrokWidth = 3
+    lineStrokWidth = 3,
+    legend
   } = config;
 
   const width: number = element.clientWidth - margin.right - margin.left;
@@ -72,12 +105,13 @@ const Linechart = (config: ILinechartConfig) => {
     .range([height, 0]);
 
   svg.append('g')
+    .attr('transform', yScaleTransform(legend))
     .attr('stroke-width', 2)
     .call(d3.axisLeft(yScaleLeft));
 
   const xScale = d3.scaleTime()
     .domain(xRange)
-    .range([0, width])
+    .range([xScaleStartPosition(legend), xScaleEndPosition(legend, width)])
 
   const xAxis = d3.axisBottom(xScale)
     .tickFormat(multiFormat as any)
@@ -104,6 +138,33 @@ const Linechart = (config: ILinechartConfig) => {
       .call(guidelineY.tickSize(-width).tickFormat('' as any))
       .selectAll('line')
       .attr('stroke', '#BDBDBD')
+  }
+
+  if (legend !== undefined) {
+    const legendEl = svg
+      .append('g')
+      .attr('transform', legendTransform(legend, width, height))
+    legendEl
+      .selectAll('labelDots')
+      .data(dataObjs.map(obj => obj.color))
+      .enter()
+      .append('circle')
+      .attr('r', 7)
+      .attr('cy', (d, i) => i * 20)
+      .attr('fill', (d) => d)
+    // legend
+    legendEl
+      .selectAll('labels')
+      .data(dataObjs.map(obj => obj.name))
+      .enter()
+      .append('text')
+      .text((d: string) => d)
+      .attr('x', 20)
+      .attr('y', (d, i) => i * 20)
+      .attr('text-anchor', 'left')
+      .style('alignment-baseline', 'middle')
+      .style('font-size', 12)
+      .attr('fill', legend.color)
   }
 
   const line = d3.line()
@@ -144,7 +205,7 @@ const Linechart = (config: ILinechartConfig) => {
     
     // 라인에 점 그리기
     if (!lineDot) return;
-    const dotEl = svg.selectAll('.dot')
+    const dotEl = svg.selectAll('dot')
       .data(dataObj.datas)
       .enter()
       .append('circle')

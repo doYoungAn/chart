@@ -14,6 +14,7 @@ const Linechart: FC<ILinechartProps> = () => {
       xRange: [new Date(2020, 0, 3), new Date(2020, 0, 8)],
       dataObjs: [
         {
+          name: 'apple',
           color: '#4FC3F7',
           datas: [
             { date: new Date(2020, 0, 4), value: 100 },
@@ -22,6 +23,7 @@ const Linechart: FC<ILinechartProps> = () => {
           ]
         },
         {
+          name: 'train',
           color: '#EF9A9A',
           datas: [
             { date: new Date(2020, 0, 3), value: 150 },
@@ -33,6 +35,7 @@ const Linechart: FC<ILinechartProps> = () => {
           ]
         },
         {
+          name: 'car',
           color: '#B2DFDB',
           datas: [
             { date: new Date(2020, 0, 3), value: 10 },
@@ -43,10 +46,27 @@ const Linechart: FC<ILinechartProps> = () => {
             { date: new Date(2020, 0, 8), value: 60 },
           ]
         },
+        {
+          name: 'ship',
+          color: '#DCE775',
+          datas: [
+            { date: new Date(2020, 0, 3), value: 200 },
+            { date: new Date(2020, 0, 4), value: 20 },
+            { date: new Date(2020, 0, 5), value: 30 },
+            { date: new Date(2020, 0, 6), value: 40 },
+            { date: new Date(2020, 0, 7), value: 70 },
+            { date: new Date(2020, 0, 8), value: 10 },
+          ]
+        },
       ],
       lineDot: true,
       guideline: false,
-      lineStrokWidth: 5
+      lineStrokWidth: 5,
+      legend: {
+        type: 'right',
+        width: 100,
+        color: '#000000'
+      }
     };
     d3Extend.Linechart(config);
   }, []);
