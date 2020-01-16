@@ -34,8 +34,9 @@ const App: FC<IAppProps> = (): JSX.Element => {
         <Timeline />
         <Piechart />
         <div className="card" style={{ width: '33%', height: 400, backgroundColor: '#757575', display: 'flex', flexWrap: 'wrap' }}>
+          <div className="card-title">Half Donutchart</div>
           {halfDonuts.map((halfDonut, index) => (
-            <div key={index} style={{ width: '50%', height: 200 }}>
+            <div key={index} style={{ width: '50%', height: 350 / 2 }}>
               <HalfDonutchart
                 data={halfDonut.data}
                 dataColor={halfDonut.dataColor}

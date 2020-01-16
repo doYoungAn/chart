@@ -47,11 +47,6 @@ const Timeline: FC<ITimelineProps> = (): JSX.Element => {
           start: new Date(2020, 0, 13, 6),
           end: new Date(2020, 0, 13, 8, 30)
         },
-        {
-          name: 'gf',
-          start: new Date(2020, 0, 13, 6),
-          end: new Date(2020, 0, 13, 8, 30)
-        },
       ],
       nameWidth: 100,
       nameColor: '#ffffff',
@@ -71,7 +66,8 @@ const Timeline: FC<ITimelineProps> = (): JSX.Element => {
   return (
     <>
       <div className="card" style={{ width: '33%', height: 400, backgroundColor: '#757575' }}>
-        <div ref={wrapper} style={{ width: '100%', height: '100%' }}></div>
+        <div className="card-title">Timeline</div>
+        <div ref={wrapper} style={{ width: '100%', height: 350 }}></div>
       </div>
     </>
   );

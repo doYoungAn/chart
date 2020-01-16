@@ -73,8 +73,9 @@ const Linechart: FC<ILinechartProps> = () => {
 
   return (
     <>
-    <div className="card" style={{ width: '33%' }}>
-      <div style={{ width: '100%', height: 400 }} ref={wrapper}></div>
+    <div className="card" style={{ width: '33%', height: 400 }}>
+      <div className="card-title">Linechart</div>
+      <div style={{ width: '100%', height: 350 }} ref={wrapper}></div>
     </div>
     </>
   );

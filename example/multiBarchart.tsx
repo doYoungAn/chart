@@ -13,7 +13,8 @@ const MultiBarchart: FC<IMultiBarchartProps> = (): JSX.Element => {
   return (
     <>
       <div className="card" style={{ width: '33%', height: 400 }}>
-        <div ref={wrapper} style={{ width: '100%', height: '100%' }}></div>
+        <div className="card-title">Multi Barchart</div>
+        <div ref={wrapper} style={{ width: '100%', height: 350 }}></div>
       </div>
     </>
   )
