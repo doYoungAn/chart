@@ -5,6 +5,9 @@ import Timeline from './timeline';
 import Piechart from './piechart';
 import HalfDonutchart from './halfDonutchart';
 import MultiBarchart from './multiBarchart';
+import Donutchart from './donutchart';
+import HalfPieChart from './halfPiechart';
+import Areachart from './areachart';
 
 const halfDonutProps = [
   { data: Math.floor(Math.random() * 10) * 10, dataColor: '#B39DDB', tickSize: 30 },
@@ -21,14 +24,18 @@ const App: FC<IAppProps> = (): JSX.Element => {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
+      <div className="row">
         <Linechart />
         <Barchart />
         <MultiBarchart />
       </div>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div className="row">
         <Timeline />
         <Piechart />
+        <Donutchart />
+      </div>
+      <div className="row">
+        <HalfPieChart />
         <div className="card" style={{ width: '33%', height: 400, backgroundColor: '#757575', display: 'flex', flexWrap: 'wrap' }}>
           <div className="card-title">Half Donutchart</div>
           {halfDonuts.map((halfDonut, index) => (
@@ -41,6 +48,7 @@ const App: FC<IAppProps> = (): JSX.Element => {
             </div>
           ))}
         </div>
+        <Areachart />
       </div>
     </>
   );
