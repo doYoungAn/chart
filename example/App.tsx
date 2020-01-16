@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect } from 'react';
+import React, { FC, useState } from 'react';
 import Linechart from './linechart';
 import Barchart from './barchart';
 import Timeline from './timeline';
@@ -18,10 +18,6 @@ interface IAppProps {}
 const App: FC<IAppProps> = (): JSX.Element => {
 
   const [halfDonuts, setHalfDonuts] = useState<{ data: number, dataColor: string, tickSize: number }[]>(halfDonutProps);
-
-  useEffect(() => {
-    console.log(halfDonuts)
-  })
 
   return (
     <>
