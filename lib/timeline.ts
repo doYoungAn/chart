@@ -14,6 +14,13 @@ interface ITimelineDataObj {
   end: Date;
 }
 
+interface ITimelinePercent {
+  width: number;
+  color: string;
+  textColor: string;
+  opacity: number;
+}
+
 export interface ITimelineConfig {
   element: HTMLElement;
   xRange: [Date, Date];
@@ -25,6 +32,7 @@ export interface ITimelineConfig {
   barHeight?: number;
   barGap?: number;
   margin?: IChartMargin;
+  percent?: ITimelinePercent;
 }
 
 const Margin: IChartMargin = {
@@ -55,11 +63,12 @@ const Timeline = (config: ITimelineConfig) => {
     timeColor = '#000000',
     barHeight = 32,
     barGap = 4,
-    margin = Margin
+    margin = Margin,
+    percent
   } = config;
   const baseOpacity: number = 0.3;
   const strongOpacity: number = 0.6;
-  const percentWidth: number = 110;
+  const percentGap: number = 10;
   const width: number = element.clientWidth - margin.right - margin.left;
   const height: number = element.clientHeight - margin.top - margin.bottom;
   const rowHeight: number = barHeight + (2 * barGap);
@@ -78,39 +87,41 @@ const Timeline = (config: ITimelineConfig) => {
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
 
-  // 퍼센트 bar G
-  const percentRects = svg
-    .append('g')
-    .attr('transform', `translate(${margin.left + width - percentWidth}, ${margin.top})`)
-    .selectAll('rect')
-    .data(uniqueNames)
-    .enter()
-    .append('rect')
-    .attr('x', 10)
-    .attr('rx', 3)
-    .attr('ry', 3)
-    .attr('y', (d: string, i: number) => i * rowHeight + barGap)
-    .attr('width', 0)
-    .attr('height', barHeight)
-    .attr('opacity', 0.7)
-    .attr('fill', '#A5D6A7')
-  percentRects
-    .transition()
-    .duration(1000)
-    .attr('width', (d: string) => getPercent(dataObjs, xRange, d))
-  const percentTexts = svg
-    .append('g')
-    .attr('transform', `translate(${margin.left + width - percentWidth}, ${margin.top})`)
-    .selectAll('text')
-    .data(uniqueNames)
-    .enter()
-    .append('text')
-    .text((d: string) => `${getPercent(dataObjs, xRange, d)} %`)
-    .attr('x', (percentWidth / 2) - 8)
-    .attr('fill', '#ffffff')
-    .attr('y', (d: string, i: number) => i * rowHeight + rowHeight / 2 + 6)
-    .attr('height', rowHeight)
-    .attr('font-size', 14)
+  if (percent !== undefined) {
+    // 퍼센트 bar G
+    const percentRects = svg
+      .append('g')
+      .attr('transform', `translate(${margin.left + width - percent.width - percentGap}, ${margin.top})`)
+      .selectAll('rect')
+      .data(uniqueNames)
+      .enter()
+      .append('rect')
+      .attr('x', 10)
+      .attr('rx', 3)
+      .attr('ry', 3)
+      .attr('y', (d: string, i: number) => i * rowHeight + barGap)
+      .attr('width', 0)
+      .attr('height', barHeight)
+      .attr('opacity', percent.opacity)
+      .attr('fill', percent.color)
+    percentRects
+      .transition()
+      .duration(1000)
+      .attr('width', (d: string) => percent.width / 100 * getPercent(dataObjs, xRange, d) )
+    const percentTexts = svg
+      .append('g')
+      .attr('transform', `translate(${margin.left + width - percent.width - percentGap}, ${margin.top})`)
+      .selectAll('text')
+      .data(uniqueNames)
+      .enter()
+      .append('text')
+      .text((d: string) => `${getPercent(dataObjs, xRange, d)} %`)
+      .attr('x', ((percent.width + percentGap) / 2) - 8)
+      .attr('fill', percent.textColor)
+      .attr('y', (d: string, i: number) => i * rowHeight + rowHeight / 2 + 6)
+      .attr('height', rowHeight)
+      .attr('font-size', 14)
+  }
   
   // 최상단 G
   const parentRects = svg.append('g')
@@ -121,7 +132,7 @@ const Timeline = (config: ITimelineConfig) => {
     .append('rect')
     .attr('y', (d: string, i: number) => i * rowHeight)
     .attr('height', rowHeight)
-    .attr('width', width - percentWidth)
+    .attr('width', width - (percent !== undefined ? percent.width + percentGap : 0))
     .attr('opacity', baseOpacity)
     .attr('fill', (d: string) => colorScale(d) as string)
   // 부모 rect 이벤트 걸기
@@ -160,7 +171,7 @@ const Timeline = (config: ITimelineConfig) => {
 
   const xScale = d3.scaleTime()
     .domain(xRange)
-    .range([0, width - nameWidth - percentWidth])
+    .range([0, width - nameWidth - (percent !== undefined ? percent.width + percentGap : 0)])
 
   const xAxis = d3.axisBottom(xScale)
     .tickSize(rowHeight * uniqueNames.length)
@@ -168,7 +179,7 @@ const Timeline = (config: ITimelineConfig) => {
 
   const timeScale = d3.scaleTime()
     .domain(xRange)
-    .range([0, width - nameWidth - percentWidth])
+    .range([0, width - nameWidth - (percent !== undefined ? percent.width + percentGap : 0)])
 
   // 타임라인 보여준다
   const timeRectEls = svg.append('g')

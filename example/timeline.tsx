@@ -57,7 +57,13 @@ const Timeline: FC<ITimelineProps> = (): JSX.Element => {
       nameColor: '#ffffff',
       gridColor: '#BDBDBD',
       barHeight: 30,
-      barGap: 6
+      barGap: 6,
+      percent: {
+        width: 90,
+        textColor: '#ffffff',
+        color: '#FFD54F',
+        opacity: 0.5
+      }
     };
     d3Extends.Timeline(config);
   }, []);
