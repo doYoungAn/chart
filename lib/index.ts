@@ -8,11 +8,14 @@ import HalfDonutchart from './halfDonutchart';
 export { IHalfDonutchartConfig } from './halfDonutchart';
 import Barchart  from './barchart';
 export { IBarchartConfig } from './barchart';
+import MultiBarchart from './multiBarchart';
+export { IMultiBarchartConfig } from './multiBarchart';
 
 export default {
   Linechart,
   Timeline,
   Piechart,
   HalfDonutchart,
-  Barchart
+  Barchart,
+  MultiBarchart
 }
