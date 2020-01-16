@@ -44,7 +44,7 @@ const Margin: IChartMargin = {
   left: 50
 };
 
-const baseOpacity: number           = 0.5;
+const baseOpacity: number           = 0.3;
 const strongOpacity: number         = 1;
 
 const yScaleTransform = (legend: ILinechartLegend): string => {
@@ -65,10 +65,22 @@ const xScaleEndPosition = (legend: ILinechartLegend, width: number): number => {
   if (legend.type === 'right') return width - legend.width;
 }
 
-const legendTransform = (legend: ILinechartLegend, width: number, height: number): string => {
+const legendTransform = (legend: ILinechartLegend, dataObjsLength: number, width: number, height: number): string => {
   if (legend === undefined) return ``;
-  if (legend.type === 'left') return `translate(${0}, ${height / 2})`;
-  if (legend.type === 'right') return `translate(${width - legend.width + 20}, ${height / 2})`;
+  if (legend.type === 'left') return `translate(${0}, ${(height / 2) - (dataObjsLength * 4)})`;
+  if (legend.type === 'right') return `translate(${width - legend.width + 20}, ${(height / 2) - (dataObjsLength * 4)})`;
+}
+
+const guideYWidth = (legend: ILinechartLegend, width: number): number => {
+  if (legend === undefined) return -width;
+  if (legend.type === 'left') return -width + legend.width;
+  if (legend.type === 'right') return -width + legend.width;
+}
+
+const guideYTransform = (legend: ILinechartLegend) => {
+  if (legend === undefined) return ``;
+  if (legend.type === 'left') return `translate(${legend.width}, 0)`;
+  if (legend.type === 'right') return ``;
 }
 
 const Linechart = (config: ILinechartConfig) => {
@@ -125,46 +137,97 @@ const Linechart = (config: ILinechartConfig) => {
   if (guideline) {
     const guidelineX = d3.axisBottom(xScale);
     const guidelineY = d3.axisLeft(yScaleLeft);
-    svg
-      .append('g')
+    const guideXGEl = svg.append('g');
+    const guideYGEl = svg.append('g');
+    guideXGEl
       .attr('stroke-opacity', 0.5)
       .attr('transform', `translate(0, ${height})`)
       .call(guidelineX.tickSize(-height).tickFormat('' as any))
       .selectAll('line')
       .attr('stroke', '#BDBDBD');
-    svg
-      .append('g')
+    guideXGEl.selectAll('path').attr('stroke-width', 0);
+    guideYGEl
+      .attr('transform', guideYTransform(legend))
       .attr('stroke-opacity', 0.5)
-      .call(guidelineY.tickSize(-width).tickFormat('' as any))
+      .call(guidelineY.tickSize(guideYWidth(legend, width)).tickFormat('' as any))
       .selectAll('line')
       .attr('stroke', '#BDBDBD')
+    guideYGEl.selectAll('path').attr('stroke-width', 0);
   }
 
   if (legend !== undefined) {
     const legendEl = svg
       .append('g')
-      .attr('transform', legendTransform(legend, width, height))
-    legendEl
-      .selectAll('labelDots')
-      .data(dataObjs.map(obj => obj.color))
+      .attr('transform', legendTransform(legend, dataObjs.length, width, height))
+    const legendDots = legendEl
+      .selectAll('legendDots')
+      .data(dataObjs.map(obj => ({color: obj.color, name: obj.name})))
       .enter()
       .append('circle')
       .attr('r', 7)
       .attr('cy', (d, i) => i * 20)
-      .attr('fill', (d) => d)
+      .attr('fill', (d) => d.color)
     // legend
-    legendEl
-      .selectAll('labels')
+    const legendTexts = legendEl
+      .selectAll('legendTexts')
       .data(dataObjs.map(obj => obj.name))
       .enter()
       .append('text')
       .text((d: string) => d)
-      .attr('x', 20)
+      .attr('x', 14)
       .attr('y', (d, i) => i * 20)
       .attr('text-anchor', 'left')
       .style('alignment-baseline', 'middle')
       .style('font-size', 12)
       .attr('fill', legend.color)
+    legendDots
+      .on('mouseover', (d) => {
+        const names: string[] = dataObjs.map(obj => obj.name);
+        lineEls.forEach((lineEl, index) => {
+          const targetIndex: number = names.findIndex((name: string) => name === d.name);
+          if (index === targetIndex) {
+            lineEl.attr('opacity', strongOpacity);
+          } else {
+            lineEl.attr('opacity', baseOpacity);
+          }
+        });
+        dotEls.forEach((dotEl, index) => {
+          const targetIndex: number = names.findIndex((name: string) => name === d.name);
+          if (index === targetIndex) {
+            dotEl.attr('opacity', strongOpacity);
+          } else {
+            dotEl.attr('opacity', baseOpacity);
+          }
+        });
+      })
+      .on('mouseleave', (d) => {
+        lineEls.forEach((lineEl) => lineEl.attr('opacity', strongOpacity));
+        dotEls.forEach((dotEl) => dotEl.attr('opacity', strongOpacity));
+      });
+    legendTexts
+      .on('mouseover', (d: string) => {
+        const names: string[] = dataObjs.map(obj => obj.name);
+        lineEls.forEach((lineEl, index) => {
+          const targetIndex: number = names.findIndex((name: string) => name === d);
+          if (index === targetIndex) {
+            lineEl.attr('opacity', strongOpacity)
+          } else {
+            lineEl.attr('opacity', baseOpacity)
+          }
+        });
+        dotEls.forEach((dotEl, index) => {
+          const targetIndex: number = names.findIndex((name: string) => name === d);
+          if (index === targetIndex) {
+            dotEl.attr('opacity', strongOpacity);
+          } else {
+            dotEl.attr('opacity', baseOpacity);
+          }
+        });
+      })
+      .on('mouseleave', (d: string) => {
+        lineEls.forEach((lineEl) => lineEl.attr('opacity', strongOpacity));
+        dotEls.forEach((dotEl) => dotEl.attr('opacity', strongOpacity));
+      })
   }
 
   const line = d3.line()
