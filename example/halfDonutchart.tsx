@@ -1,25 +1,30 @@
 import React, { FC, useRef, useEffect } from 'react';
 import d3Extend, { IHalfDonutchartConfig } from './../lib';
 
-interface IHalfDonutchartProps {}
+interface IHalfDonutchartProps {
+  data: number;
+  dataColor: string;
+  tickSize: number;
+}
 
-const HalfDonutchart: FC<IHalfDonutchartProps> = (): JSX.Element => {
+const HalfDonutchart: FC<IHalfDonutchartProps> = ({ data, dataColor, tickSize }): JSX.Element => {
 
   const wrapper = useRef(null);
 
   useEffect(() => {
     const config: IHalfDonutchartConfig = {
       element: wrapper.current,
-      data: 77.6
+      data: data,
+      tickSize: tickSize,
+      dataColor: dataColor,
+      fontSize: '1.2rem'
     };
     d3Extend.HalfDonutchart(config);
   }, []);
 
   return (
     <>
-      <div className="card" style={{ width: '33%', backgroundColor: '#757575' }}>
-        <div style={{ width: '100%', height: 400 }} ref={wrapper}></div>
-      </div>
+      <div style={{ width: '100%', height: '100%' }} ref={wrapper}></div>
     </>
   )
 
