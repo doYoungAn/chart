@@ -10,6 +10,8 @@ import Barchart  from './barchart';
 export { IBarchartConfig } from './barchart';
 import MultiBarchart from './multiBarchart';
 export { IMultiBarchartConfig } from './multiBarchart';
+import Donutchart from './donutchart';
+export { IDonutchartConfig } from './donutchart';
 
 export default {
   Linechart,
@@ -17,5 +19,6 @@ export default {
   Piechart,
   HalfDonutchart,
   Barchart,
-  MultiBarchart
+  MultiBarchart,
+  Donutchart
 }
