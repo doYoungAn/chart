@@ -19,7 +19,7 @@ const Piechart: FC<IPieChartProps> = (): JSX.Element => {
 
   return (
     <>
-      <div className="card" style={{ width: '49%' }}>
+      <div className="card" style={{ width: '33%' }}>
         <div style={{ width: '100%', height: 400 }} ref={wrapper}></div>
       </div>
     </>  

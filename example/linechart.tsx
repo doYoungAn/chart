@@ -64,7 +64,7 @@ const Linechart: FC<ILinechartProps> = () => {
       lineStrokWidth: 5,
       legend: {
         type: 'right',
-        width: 100,
+        width: 60,
         color: '#000000'
       }
     };
@@ -73,7 +73,7 @@ const Linechart: FC<ILinechartProps> = () => {
 
   return (
     <>
-    <div className="card" style={{ width: '49%' }}>
+    <div className="card" style={{ width: '33%' }}>
       <div style={{ width: '100%', height: 400 }} ref={wrapper}></div>
     </div>
     </>

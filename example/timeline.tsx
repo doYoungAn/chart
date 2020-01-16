@@ -64,7 +64,7 @@ const Timeline: FC<ITimelineProps> = (): JSX.Element => {
 
   return (
     <>
-      <div className="card" style={{ width: '49%', height: 400, backgroundColor: '#757575' }}>
+      <div className="card" style={{ width: '33%', height: 400, backgroundColor: '#757575' }}>
         <div ref={wrapper} style={{ width: '100%', height: '100%' }}></div>
       </div>
     </>

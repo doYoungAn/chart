@@ -17,7 +17,7 @@ const HalfDonutchart: FC<IHalfDonutchartProps> = (): JSX.Element => {
 
   return (
     <>
-      <div className="card" style={{ width: '49%', backgroundColor: '#757575' }}>
+      <div className="card" style={{ width: '33%', backgroundColor: '#757575' }}>
         <div style={{ width: '100%', height: 400 }} ref={wrapper}></div>
       </div>
     </>
