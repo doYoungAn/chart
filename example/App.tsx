@@ -4,6 +4,7 @@ import Barchart from './barchart';
 import Timeline from './timeline';
 import Piechart from './piechart';
 import HalfDonutchart from './halfDonutchart';
+import MultiBarchart from './multiBarchart';
 
 interface IAppProps {}
 
@@ -14,9 +15,10 @@ const App: FC<IAppProps> = (): JSX.Element => {
       <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 20 }}>
         <Linechart />
         <Barchart />
-        <Timeline />
+        <MultiBarchart />
       </div>
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Timeline />
         <Piechart />
         <HalfDonutchart />
       </div>
