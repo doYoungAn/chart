@@ -28,7 +28,7 @@ const Donutchart = (config: IDonutchartConfig) => {
   const height: number = element.clientHeight;
   const anglesRange = Math.PI * 0.5;
   const radis = Math.min(width, height) / 2 - margin;
-  const datas: [number, number] = [data, 100 - data];
+  // const datas: [number, number] = [data, 100 - data];
 
   const pies = d3.pie()
     .value((d: any) => d)
@@ -53,12 +53,31 @@ const Donutchart = (config: IDonutchartConfig) => {
     .attr('transform', `translate(${width / 2}, ${height /2})`)
 
   const partEls = parentGEl
-    .selectAll('path')
-    .data(pies(datas))
+    .selectAll('back')
+    .data(pies([100]))
+    .enter()
+    .append('path')
+    .attr('fill', '#ffffff')
+    .attr('d', (d) => {
+      console.log('d', d);
+      return arc(d as any)
+    });
+
+  parentGEl
+    .selectAll('aaa')
+    .data(pies([data, 100 - data]))
     .enter()
     .append('path')
     .attr('fill', (d, i) => colors[i])
-    .attr('d', (d) => arc(d as any));
+    .transition()
+    .duration(1000)
+    .attrTween('d', (d) => {
+      const i = d3.interpolate(d.startAngle + 0.1, d.endAngle)
+      return (t) => {
+        d.endAngle = i(t)
+        return arc(d as any)
+      }
+    });
 
   parentGEl.append('text')
     .text(`${data}%`)

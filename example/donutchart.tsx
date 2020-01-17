@@ -1,17 +1,21 @@
 import React, { FC, useRef, useEffect } from 'react';
 import d3Extend, { IDonutchartConfig } from './../lib';
 
-interface IDonutchartProps {}
+interface IDonutchartProps {
+  data: number;
+  dataColor: string;
+}
 
-const Donutchart: FC<IDonutchartProps> = (): JSX.Element => {
+const Donutchart: FC<IDonutchartProps> = ({ data, dataColor }): JSX.Element => {
 
   const wrapper = useRef(null);
 
   useEffect(() => {
     const config: IDonutchartConfig = {
       element: wrapper.current,
-      data: 20,
-      fontSize: '1.2rem'
+      data: data,
+      fontSize: '1.2rem',
+      dataColor: dataColor
     };
     d3Extend.Donutchart(config);
   }, []);

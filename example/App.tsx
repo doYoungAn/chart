@@ -16,11 +16,19 @@ const halfDonutProps = [
   { data: Math.floor(Math.random() * 10) * 10, dataColor: '#FFE082', tickSize: 30 },
 ];
 
+const donutProps = [
+  { data: Math.floor(Math.random() * 10) * 10, dataColor: '#B39DDB', tickSize: 30 },
+  { data: Math.floor(Math.random() * 10) * 10, dataColor: '#80DEEA', tickSize: 30 },
+  { data: Math.floor(Math.random() * 10) * 10, dataColor: '#C5E1A5', tickSize: 30 },
+  { data: Math.floor(Math.random() * 10) * 10, dataColor: '#FFE082', tickSize: 30 },
+]
+
 interface IAppProps {}
 
 const App: FC<IAppProps> = (): JSX.Element => {
 
   const [halfDonuts, setHalfDonuts] = useState<{ data: number, dataColor: string, tickSize: number }[]>(halfDonutProps);
+  const [donuts, setdonuts] = useState<{ data: number, dataColor: string, tickSize: number }[]>(halfDonutProps);
 
   return (
     <>
@@ -34,9 +42,12 @@ const App: FC<IAppProps> = (): JSX.Element => {
         <Piechart />
         <div className="card" style={{ width: '33%', height: 400, backgroundColor: '#757575', display: 'flex', flexWrap: 'wrap' }}>
           <div className="card-title">Donutchart</div>
-          {[0,0,0,0].map((obj, index) => (
+          {donuts.map((donut, index) => (
             <div key={index} style={{ width: '50%', height: 350 / 2 }}>
-              <Donutchart />
+              <Donutchart
+                data={donut.data}
+                dataColor={donut.dataColor}
+              />
             </div>
           ))}
         </div>
