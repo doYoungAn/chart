@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-export interface IDonutchartConfig {
+export interface IHalfPiechartConfig {
   element: HTMLElement;
   data: number;
   tickSize?: number;
@@ -11,16 +11,16 @@ export interface IDonutchartConfig {
   fontSize?: number | string;
 }
 
-const Donutchart = (config: IDonutchartConfig) => {
+const HalfPiechart = (config: IHalfPiechartConfig) => {
 
   const {
     element,
     data,
-    tickSize = 20,
+    tickSize = 70,
     dataColor = '#5EBBF8',
     textColor = '#ffffff',
     leftColor = '#F5F5F5',
-    margin = 12,
+    margin = 0,
     fontSize = 30
   } = config;
 
@@ -28,20 +28,20 @@ const Donutchart = (config: IDonutchartConfig) => {
   const height: number = element.clientHeight;
   const anglesRange = Math.PI * 0.5;
   const radis = Math.min(width, height) / 2 - margin;
-  // const datas: [number, number] = [data, 100 - data];
+  const datas: [number, number] = [data, 100 - data];
 
   const pies = d3.pie()
     .value((d: any) => d)
-    // .sort(null)
-    // .startAngle(0)
-    // .endAngle(anglesRange);
+    .sort(null)
+    .startAngle(anglesRange * -1)
+    .endAngle(anglesRange);
 
   const colors = [dataColor, leftColor];
 
   const arc = d3
     .arc()
-    .outerRadius(radis)
-    .innerRadius(radis - tickSize)
+    .outerRadius(0)
+    .innerRadius(radis)
 
   const svg = d3.select(element)
     .append('svg')
@@ -50,42 +50,24 @@ const Donutchart = (config: IDonutchartConfig) => {
 
   const parentGEl = svg 
     .append('g')
-    .attr('transform', `translate(${width / 2}, ${height /2})`)
+    .attr('transform', `translate(${width / 2}, ${height})`)
 
   const partEls = parentGEl
-    .selectAll('back')
-    .data(pies([100]))
-    .enter()
-    .append('path')
-    .attr('fill', '#ffffff')
-    .attr('d', (d) => {
-      console.log('d', d);
-      return arc(d as any)
-    });
-
-  parentGEl
-    .selectAll('aaa')
-    .data(pies([data, 100 - data]))
+    .selectAll('path')
+    .data(pies(datas))
     .enter()
     .append('path')
     .attr('fill', (d, i) => colors[i])
-    .transition()
-    .duration(1000)
-    .attrTween('d', (d) => {
-      const i = d3.interpolate(d.startAngle + 0.1, d.endAngle)
-      return (t) => {
-        d.endAngle = i(t)
-        return arc(d as any)
-      }
-    });
+    .attr('opacity', 0.8)
+    .attr('d', (d) => arc(d as any));
 
   parentGEl.append('text')
     .text(`${data}%`)
-    .attr('y', 12)
+    .attr('dy', '-1rem')
     .attr('text-anchor', 'middle')
-    .attr('fill', '#ffffff')
+    .attr('fill', textColor)
     .style('font-size', fontSize)
 
 };
 
-export default Donutchart;
+export default HalfPiechart;

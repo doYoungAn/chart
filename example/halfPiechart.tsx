@@ -1,24 +1,33 @@
 import React, { FC, useRef, useEffect } from 'react';
+import d3Extend, { IHalfPiechartConfig } from './../lib';
 
-interface IHalfPiechartProps {}
+interface IHalfDonutchartProps {
+  data: number;
+  dataColor: string;
+  tickSize: number;
+}
 
-const HalfPiechart: FC<IHalfPiechartProps> = (): JSX.Element => {
+const HalfDonutchart: FC<IHalfDonutchartProps> = ({ data, dataColor, tickSize }): JSX.Element => {
 
   const wrapper = useRef(null);
 
   useEffect(() => {
-
+    const config: IHalfPiechartConfig = {
+      element: wrapper.current,
+      data: data,
+      tickSize: tickSize,
+      dataColor: dataColor,
+      fontSize: '1.2rem'
+    };
+    d3Extend.HalfPiechart(config);
   }, []);
 
   return (
     <>
-      <div className="card" style={{ width: '33%', height: 400 }}>
-        <div className="card-title">Half Piechart</div>
-        <div ref={wrapper} style={{ width: '100%', height: 350 }}></div>
-      </div>
+      <div style={{ width: '100%', height: '100%' }} ref={wrapper}></div>
     </>
-  );
+  )
 
-}
+};
 
-export default HalfPiechart;
+export default HalfDonutchart;

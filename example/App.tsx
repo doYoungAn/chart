@@ -53,7 +53,18 @@ const App: FC<IAppProps> = (): JSX.Element => {
         </div>
       </div>
       <div className="row">
-        <HalfPieChart />
+      <div className="card" style={{ width: '33%', height: 400, backgroundColor: '#757575', display: 'flex', flexWrap: 'wrap' }}>
+          <div className="card-title">Half Piechart</div>
+          {halfDonuts.map((halfDonut, index) => (
+            <div key={index} style={{ width: '50%', height: 350 / 2 }}>
+              <HalfPieChart
+                data={halfDonut.data}
+                dataColor={halfDonut.dataColor}
+                tickSize={halfDonut.tickSize}
+              />
+            </div>
+          ))}
+        </div>
         <div className="card" style={{ width: '33%', height: 400, backgroundColor: '#757575', display: 'flex', flexWrap: 'wrap' }}>
           <div className="card-title">Half Donutchart</div>
           {halfDonuts.map((halfDonut, index) => (
