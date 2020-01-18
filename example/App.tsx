@@ -10,6 +10,7 @@ import HalfPieChart from './halfPiechart';
 import Areachart from './areachart';
 import Heatmap from './heatmap';
 import Scatterplot from './scatterplot';
+import Treemap from './treemap';
 
 const halfDonutProps = [
   { data: Math.floor(Math.random() * 10) * 10, dataColor: '#B39DDB', tickSize: 30 },
@@ -83,6 +84,7 @@ const App: FC<IAppProps> = (): JSX.Element => {
       </div>
       <div className="row">
         <Heatmap />
+        <Treemap /> 
         <Scatterplot />
       </div>
     </>
