@@ -14,6 +14,8 @@ import Donutchart from './donutchart';
 export { IDonutchartConfig } from './donutchart';
 import HalfPiechart from './halfPiechart';
 export { IHalfPiechartConfig } from './halfPiechart';
+import Areachart from './areachart';
+export { IAreachartConfig } from './areachart';
 
 export default {
   Linechart,
@@ -23,5 +25,6 @@ export default {
   Barchart,
   MultiBarchart,
   Donutchart,
-  HalfPiechart
+  HalfPiechart,
+  Areachart
 }
