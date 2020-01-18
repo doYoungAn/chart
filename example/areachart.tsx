@@ -12,6 +12,7 @@ const Areachart: FC<IAreachartProps> = (): JSX.Element => {
       element: wrapper.current,
       dataObjs: [
         {
+          name: 'aaa',
           color: '#69b3a2',
           datas: [
             { date: new Date(2020, 0, 13), value: 140 },
@@ -21,6 +22,7 @@ const Areachart: FC<IAreachartProps> = (): JSX.Element => {
           ]
         },
         {
+          name: 'bbb',
           color: '#90CAF9',
           datas: [
             { date: new Date(2020, 0, 13), value: 10 },
@@ -30,7 +32,8 @@ const Areachart: FC<IAreachartProps> = (): JSX.Element => {
           ]
         },
         {
-          color: '#A1887F',
+          name: 'ccc',
+          color: '#FBC02D',
           datas: [
             { date: new Date(2020, 0, 13), value: 50 },
             { date: new Date(2020, 0, 14), value: 40 },

@@ -40,7 +40,7 @@ const App: FC<IAppProps> = (): JSX.Element => {
       <div className="row">
         <Timeline />
         <Piechart />
-        <div className="card" style={{ width: '33%', height: 400, backgroundColor: '#757575', display: 'flex', flexWrap: 'wrap' }}>
+        <div className="card" style={{ width: '33%', height: 400, display: 'flex', flexWrap: 'wrap' }}>
           <div className="card-title">Donutchart</div>
           {donuts.map((donut, index) => (
             <div key={index} style={{ width: '50%', height: 350 / 2 }}>
@@ -53,7 +53,7 @@ const App: FC<IAppProps> = (): JSX.Element => {
         </div>
       </div>
       <div className="row">
-      <div className="card" style={{ width: '33%', height: 400, backgroundColor: '#757575', display: 'flex', flexWrap: 'wrap' }}>
+      <div className="card" style={{ width: '33%', height: 400, display: 'flex', flexWrap: 'wrap' }}>
           <div className="card-title">Half Piechart</div>
           {halfDonuts.map((halfDonut, index) => (
             <div key={index} style={{ width: '50%', height: 350 / 2 }}>
@@ -65,7 +65,7 @@ const App: FC<IAppProps> = (): JSX.Element => {
             </div>
           ))}
         </div>
-        <div className="card" style={{ width: '33%', height: 400, backgroundColor: '#757575', display: 'flex', flexWrap: 'wrap' }}>
+        <div className="card" style={{ width: '33%', height: 400, display: 'flex', flexWrap: 'wrap' }}>
           <div className="card-title">Half Donutchart</div>
           {halfDonuts.map((halfDonut, index) => (
             <div key={index} style={{ width: '50%', height: 350 / 2 }}>

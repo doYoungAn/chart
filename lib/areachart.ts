@@ -13,6 +13,7 @@ interface IAreachartData {
 }
 
 interface IAreachartDataObj { 
+    name: string;
     color: string;
     datas: IAreachartData[];
 }
@@ -96,15 +97,33 @@ const Areachart = (config: IAreachartConfig) => {
         guideXEl.selectAll('path').attr('stroke-width', 0);
     }
 
+    const dataEls:  d3.Selection<SVGPathElement, IAreachartData[], null, undefined>[] = [];
+
     dataObjs.forEach((dataObj) => {
-        parentGEl
+        const dataEl = parentGEl
             .append('path')
             .datum(dataObj.datas)
             .attr('fill', dataObj.color)
             .attr("stroke", dataObj.color)
             .attr("stroke-width", 1.5)
-            .attr('fill-opacity', 0.2)
-            .attr('d', d3.area().x((d: any) => x(d.date)).y0(y(0)).y1((d: any) => y(d.value)) as any)
+            .attr('fill-opacity', 0.3)
+            .attr('stroke-opacity', 1)
+            .attr('d', d3.area().x((d: any) => x(d.date)).y0(y(0)).y1((d: any) => y(d.value)) as any);
+        dataEl
+            .on('mouseover', (d) => {
+                dataEls.forEach(el => {
+                    el.attr('fill-opacity', 0.3);
+                    el.attr('stroke-opacity', 0.3);
+                })
+                dataEl.attr('fill-opacity', 1);
+            })
+            .on('mouseleave', (d) => {
+                dataEls.forEach(el => {
+                    el.attr('fill-opacity', 0.3);
+                    el.attr('stroke-opacity', 1);
+                })
+            });
+        dataEls.push(dataEl);
     })
 
 }
