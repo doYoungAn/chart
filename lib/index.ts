@@ -18,6 +18,8 @@ import Areachart from './areachart';
 export { IAreachartConfig } from './areachart';
 import Heatmap from './heatmap';
 export { IHeatmapConfig } from './heatmap';
+import Scatterplot from './scatterplot';
+export { IScatterplotConfig } from './scatterplot';
 
 export default {
   Linechart,
@@ -29,5 +31,6 @@ export default {
   Donutchart,
   HalfPiechart,
   Areachart,
-  Heatmap
+  Heatmap,
+  Scatterplot
 }
