@@ -20,6 +20,8 @@ import Heatmap from './heatmap';
 export { IHeatmapConfig } from './heatmap';
 import Scatterplot from './scatterplot';
 export { IScatterplotConfig } from './scatterplot';
+import Treemap from './treemap';
+export { ITreemapConfig } from './treemap';
 
 export default {
   Linechart,
@@ -32,5 +34,6 @@ export default {
   HalfPiechart,
   Areachart,
   Heatmap,
-  Scatterplot
+  Scatterplot,
+  Treemap
 }
