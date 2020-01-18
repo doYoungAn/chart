@@ -8,6 +8,7 @@ import MultiBarchart from './multiBarchart';
 import Donutchart from './donutchart';
 import HalfPieChart from './halfPiechart';
 import Areachart from './areachart';
+import Heatmap from './heatmap';
 
 const halfDonutProps = [
   { data: Math.floor(Math.random() * 10) * 10, dataColor: '#B39DDB', tickSize: 30 },
@@ -54,7 +55,7 @@ const App: FC<IAppProps> = (): JSX.Element => {
       </div>
       <div className="row">
       <div className="card" style={{ width: '33%', height: 400, display: 'flex', flexWrap: 'wrap' }}>
-          <div className="card-title">Half Piechart</div>
+        <div className="card-title">Half Piechart</div>
           {halfDonuts.map((halfDonut, index) => (
             <div key={index} style={{ width: '50%', height: 350 / 2 }}>
               <HalfPieChart
@@ -78,6 +79,9 @@ const App: FC<IAppProps> = (): JSX.Element => {
           ))}
         </div>
         <Areachart />
+      </div>
+      <div className="row">
+        <Heatmap />
       </div>
     </>
   );
