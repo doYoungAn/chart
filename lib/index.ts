@@ -16,6 +16,8 @@ import HalfPiechart from './halfPiechart';
 export { IHalfPiechartConfig } from './halfPiechart';
 import Areachart from './areachart';
 export { IAreachartConfig } from './areachart';
+import Heatmap from './heatmap';
+export { IHeatmapConfig } from './heatmap';
 
 export default {
   Linechart,
@@ -26,5 +28,6 @@ export default {
   MultiBarchart,
   Donutchart,
   HalfPiechart,
-  Areachart
+  Areachart,
+  Heatmap
 }
