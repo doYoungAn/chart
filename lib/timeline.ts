@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import Margin, { IChartMargin } from './common/margin';
+import { IChartMargin } from './common/margin';
 import { multiFormat } from './format';
 
 interface ITimelineDataObj {
@@ -50,7 +50,7 @@ const Timeline = (config: ITimelineConfig) => {
     timeColor = '#000000',
     barHeight = 32,
     barGap = 4,
-    margin = Margin,
+    margin = { top: 20, right: 20, bottom: 20, left: 20 },
     percent
   } = config;
   const baseOpacity: number = 0.3;
