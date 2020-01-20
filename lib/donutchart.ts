@@ -9,9 +9,10 @@ interface IDonutchartData {
 export interface IDonutchartConfig {
   element: HTMLElement;
   datas: IDonutchartData[];
-  tickSize?: number
+  tickSize?: number;
   margin?: number;
-  duration?: number;
+  polylineColor?: string;
+  nameColor?: string;
 }
 
 const Donutchart = (config: IDonutchartConfig) => {
@@ -19,25 +20,29 @@ const Donutchart = (config: IDonutchartConfig) => {
   const {
     element,
     datas,
-    tickSize = 40,
+    tickSize = 0.2,
     margin = 40,
-    duration = 1000,
+    polylineColor = '#BDBDBD',
+    nameColor = '#000000'
   } = config;
 
   const width: number = element.clientWidth;
   const height: number = element.clientHeight;
-  const radis: number = Math.min(width, height) / 2 - margin;
+  const radius: number = Math.min(width, height) / 2 - margin;
 
   const pies: d3.Pie<any, any> = d3
     .pie()
     .value((d: any) => d.value)
 
-  const dataReady = pies(datas);
+  const dataReady: d3.PieArcDatum<IDonutchartData>[] = pies(datas);
 
-  const arc: d3.Arc<any, d3.DefaultArcObject> = d3
-    .arc()
-    .outerRadius(radis)
-    .innerRadius(radis - tickSize);
+  const arc: d3.Arc<any, d3.DefaultArcObject> = d3.arc()
+    .innerRadius(radius * (0.8 - tickSize))
+    .outerRadius(radius * 0.8)
+
+  const outerArc: d3.Arc<any, d3.DefaultArcObject> = d3.arc()
+    .innerRadius(radius * 0.9)
+    .outerRadius(radius * 0.9)
 
   const svg = d3
     .select(element)
@@ -55,15 +60,16 @@ const Donutchart = (config: IDonutchartConfig) => {
     .enter()
     .append('path')
     .attr('fill', (d, i) => d.data.color)
-    .transition()
-    .duration(duration)
-    .attrTween('d', (d) => {
-      const i:(t: number) => number = d3.interpolate(d.startAngle + 0.1, d.endAngle);
-      return (t: number) => {
-        d.endAngle = i(t);
-        return arc(d as any);
-      }
-    });
+    .attr('d', (d) => arc(d as any))
+    // .transition()
+    // .duration(duration)
+    // .attrTween('d', (d) => {
+    //   const i:(t: number) => number = d3.interpolate(d.startAngle + 0.1, d.endAngle);
+    //   return (t: number) => {
+    //     d.endAngle = i(t);
+    //     return arc(d as any);
+    //   }
+    // });
 
   parentGEl
     .append('g')
@@ -71,6 +77,36 @@ const Donutchart = (config: IDonutchartConfig) => {
     .data(dataReady)
     .enter()
     .append('polyline')
+    .attr('stroke', polylineColor)
+    .style('fill', 'none')
+    .attr('stroke-width', 2)
+    .attr('points', (d: any) => {
+      const posA = arc.centroid(d)
+      const posB = outerArc.centroid(d)
+      const posC = outerArc.centroid(d);
+      const midangle = d.startAngle + (d.endAngle - d.startAngle) / 2;
+      posC[0] = radius * 0.95 * (midangle < Math.PI ? 1 : -1);
+      return [posA, posB, posC] as any;
+    });
+
+  parentGEl
+    .append('g')
+    .selectAll('allLabels')
+    .data(dataReady)
+    .enter()
+    .append('text')
+    .attr('fill', nameColor)
+    .text((d) => d.data.name)
+    .attr('transform', (d: any) => {
+      const pos: [number, number] = outerArc.centroid(d);
+      const midangle: number = d.startAngle + (d.endAngle - d.startAngle) / 2;
+      pos[0] = radius * 0.99 * (midangle < Math.PI ? 1 : -1);
+      return `translate(${pos})`;
+    })
+    .style('text-anchor', (d: any) => {
+      const midangle: number = d.startAngle + (d.endAngle - d.startAngle) / 2;
+      return (midangle < Math.PI ? 'start' : 'end');
+    })
 
 };
 

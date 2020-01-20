@@ -15,10 +15,11 @@ const Donutchart: FC<IDonutchartProps> = ({ data, dataColor }): JSX.Element => {
       element: wrapper.current,
       // data: data,
       datas: [
-        { name: 'a', value: 10, color: '#CE93D8' },
+        { name: 'aaaaa', value: 10, color: '#CE93D8' },
         { name: 'b', value: 20, color: '#9FA8DA' },
         { name: 'c', value: 30, color: '#FFCC80' },
         { name: 'd', value: 40, color: '#C5E1A5' },
+        { name: 'eeeee', value: 40, color: '#C5E1A5' },
       ],
       // fontSize: '1.2rem',
       // dataColor: dataColor,
