@@ -100,9 +100,7 @@ const Linechart = (config: ILinechartConfig) => {
   const width: number = element.clientWidth - margin.right - margin.left;
   const height: number = element.clientHeight - margin.top - margin.bottom;
 
-  const lineStrongStrokWidth: number  = lineStrokWidth * 1.5;
   const circleBaseR: number           = lineStrokWidth * 1.7;
-  const circleStrongR: number         = lineStrokWidth * 1.9;
   
   // 차트 부모 svg
   const svg = d3.select(element)
@@ -250,15 +248,12 @@ const Linechart = (config: ILinechartConfig) => {
     // 라인에 이벤트 걸기
     lineEl
       .on('mouseover', () => {
-        lineEl.attr('stroke-width', lineStrongStrokWidth);
         lineEls.forEach((line) => line.attr('opacity', baseOpacity));
         lineEl.attr('opacity', strongOpacity);
-        dotEl ? dotEl.attr('r', circleStrongR) : void 0;
         dotEls.forEach((dot) => dot.attr('opacity', baseOpacity));
         dotEl ? dotEl.attr('opacity', strongOpacity) : void 0;
       })
       .on('mouseleave', () => {
-        lineEl.attr('stroke-width', lineStrokWidth);
         lineEls.forEach((line) => line.attr('opacity', strongOpacity));
         dotEl ? dotEl.attr('r', circleBaseR) : void 0;
         dotEls.forEach((dot) => dot.attr('opacity', strongOpacity));
@@ -281,10 +276,8 @@ const Linechart = (config: ILinechartConfig) => {
     dotEl
       .on('mouseover', () => {
         lineEls.forEach((line) => line.attr('opacity', baseOpacity))
-        lineEl.attr('stroke-width', lineStrongStrokWidth);
         lineEl.attr('opacity', strongOpacity);
         dotEls.forEach((dot) => dot.attr('opacity', baseOpacity));
-        dotEl.attr('r', circleStrongR);
         dotEl.attr('opacity', strongOpacity);
       })
       .on('mouseleave', () => {
