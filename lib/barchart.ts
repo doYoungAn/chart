@@ -1,11 +1,5 @@
 import * as d3 from 'd3';
-
-interface IChartMargin {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
+import Margin, { IChartMargin } from './common/margin';
 
 interface IBarchartData {
   name: string;
@@ -19,13 +13,6 @@ export interface IBarchartConfig {
   yRange: [number, number];
   margin?: IChartMargin;
   guide?: boolean;
-}
-
-const Margin = {
-  top: 50,
-  right: 50,
-  bottom: 50,
-  left: 50
 }
 
 const Barchart = (config: IBarchartConfig) => {

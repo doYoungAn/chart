@@ -1,12 +1,6 @@
 import * as d3 from 'd3';
+import Margin, { IChartMargin } from './common/margin';
 import { multiFormat } from './format';
-
-interface IChartMargin {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
 
 interface ILinechartData {
   date: Date;
@@ -36,13 +30,6 @@ export interface ILinechartConfig {
   lineStrokWidth?: number;
   legend?: ILinechartLegend;
 }
-
-const Margin: IChartMargin = {
-  top: 50,
-  right: 50,
-  bottom: 50,
-  left: 50
-};
 
 const baseOpacity: number           = 0.3;
 const strongOpacity: number         = 1;

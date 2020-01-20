@@ -1,11 +1,5 @@
 import * as d3 from 'd3';
-
-interface IChartMargin {
-    top: number;
-    right: number;
-    bottom: number;
-    left: number;
-}
+import Margin, { IChartMargin } from './common/margin';
 
 export interface ITreemapConfig {
     element: HTMLElement;
@@ -15,13 +9,6 @@ export interface ITreemapConfig {
     fillColor?: string;
     nameColor?: string;
 }
-
-const Margin: IChartMargin = {
-    top: 50,
-    right: 50,
-    bottom: 50,
-    left: 50
-};
 
 const Treemap = (config: ITreemapConfig) => {
 

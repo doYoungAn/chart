@@ -1,12 +1,6 @@
 import * as d3 from 'd3';
+import Margin, { IChartMargin } from './common/margin';
 import { multiFormat } from './format';
-
-interface IChartMargin {
-  top: number;
-  right: number;
-  bottom: number;
-  left: number;
-}
 
 interface ITimelineDataObj {
   name: string;
@@ -34,13 +28,6 @@ export interface ITimelineConfig {
   margin?: IChartMargin;
   percent?: ITimelinePercent;
 }
-
-const Margin: IChartMargin = {
-  top: 20,
-  right: 20,
-  bottom: 20,
-  left: 20
-};
 
 const getPercent = (dataObjs: ITimelineDataObj[], xRange: [Date, Date], d: string): number => {
   const timeValue: number = dataObjs
