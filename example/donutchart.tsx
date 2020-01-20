@@ -13,9 +13,15 @@ const Donutchart: FC<IDonutchartProps> = ({ data, dataColor }): JSX.Element => {
   useEffect(() => {
     const config: IDonutchartConfig = {
       element: wrapper.current,
-      data: data,
-      fontSize: '1.2rem',
-      dataColor: dataColor
+      // data: data,
+      datas: [
+        { name: 'a', value: 10, color: '#CE93D8' },
+        { name: 'b', value: 20, color: '#9FA8DA' },
+        { name: 'c', value: 30, color: '#FFCC80' },
+        { name: 'd', value: 40, color: '#C5E1A5' },
+      ],
+      // fontSize: '1.2rem',
+      // dataColor: dataColor,
     };
     d3Extend.Donutchart(config);
   }, []);

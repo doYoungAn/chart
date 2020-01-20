@@ -45,14 +45,20 @@ const App: FC<IAppProps> = (): JSX.Element => {
         <Piechart />
         <div className="card" style={{ width: '33%', height: 400, display: 'flex', flexWrap: 'wrap' }}>
           <div className="card-title">Donutchart</div>
-          {donuts.map((donut, index) => (
+          <div style={{ width: '100%', height: 350 }}>
+            <Donutchart
+              data={40}
+              dataColor={'#BDBDBD'}
+            />
+          </div>
+          {/* {donuts.map((donut, index) => (
             <div key={index} style={{ width: '50%', height: 350 / 2 }}>
               <Donutchart
-                data={donut.data}
+                data={40}
                 dataColor={donut.dataColor}
               />
             </div>
-          ))}
+          ))} */}
         </div>
       </div>
       <div className="row">

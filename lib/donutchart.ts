@@ -1,90 +1,76 @@
 import * as d3 from 'd3';
 
+interface IDonutchartData {
+  name: string;
+  value: number;
+  color: string;
+}
+
 export interface IDonutchartConfig {
   element: HTMLElement;
-  data: number;
-  tickSize?: number;
-  dataColor?: string;
-  leftColor?: string;
-  textColor?: string;
+  datas: IDonutchartData[];
+  tickSize?: number
   margin?: number;
-  fontSize?: number | string;
+  duration?: number;
 }
 
 const Donutchart = (config: IDonutchartConfig) => {
 
   const {
     element,
-    data,
-    tickSize = 20,
-    dataColor = '#5EBBF8',
-    textColor = '#ffffff',
-    leftColor = '#F5F5F5',
-    margin = 12,
-    fontSize = 30
+    datas,
+    tickSize = 40,
+    margin = 40,
+    duration = 1000,
   } = config;
 
   const width: number = element.clientWidth;
   const height: number = element.clientHeight;
-  const anglesRange = Math.PI * 0.5;
-  const radis = Math.min(width, height) / 2 - margin;
-  // const datas: [number, number] = [data, 100 - data];
+  const radis: number = Math.min(width, height) / 2 - margin;
 
-  const pies = d3.pie()
-    .value((d: any) => d)
-    // .sort(null)
-    // .startAngle(0)
-    // .endAngle(anglesRange);
+  const pies: d3.Pie<any, any> = d3
+    .pie()
+    .value((d: any) => d.value)
 
-  const colors = [dataColor, leftColor];
+  const dataReady = pies(datas);
 
-  const arc = d3
+  const arc: d3.Arc<any, d3.DefaultArcObject> = d3
     .arc()
     .outerRadius(radis)
-    .innerRadius(radis - tickSize)
+    .innerRadius(radis - tickSize);
 
-  const svg = d3.select(element)
+  const svg = d3
+    .select(element)
     .append('svg')
     .attr('width', width)
-    .attr('height', height)
+    .attr('height', height);
 
   const parentGEl = svg 
     .append('g')
-    .attr('transform', `translate(${width / 2}, ${height /2})`)
-
-  const partEls = parentGEl
-    .selectAll('back')
-    .data(pies([100]))
-    .enter()
-    .append('path')
-    .attr('fill', '#ffffff')
-    .attr('d', (d) => {
-      console.log('d', d);
-      return arc(d as any)
-    });
+    .attr('transform', `translate(${width / 2}, ${height /2})`);
 
   parentGEl
-    .selectAll('aaa')
-    .data(pies([data, 100 - data]))
+    .selectAll('origin')
+    .data(dataReady)
     .enter()
     .append('path')
-    .attr('fill', (d, i) => colors[i])
+    .attr('fill', (d, i) => d.data.color)
     .transition()
-    .duration(1000)
+    .duration(duration)
     .attrTween('d', (d) => {
-      const i = d3.interpolate(d.startAngle + 0.1, d.endAngle)
-      return (t) => {
-        d.endAngle = i(t)
-        return arc(d as any)
+      const i:(t: number) => number = d3.interpolate(d.startAngle + 0.1, d.endAngle);
+      return (t: number) => {
+        d.endAngle = i(t);
+        return arc(d as any);
       }
     });
 
-  parentGEl.append('text')
-    .text(`${data}%`)
-    .attr('y', 12)
-    .attr('text-anchor', 'middle')
-    .attr('fill', '#ffffff')
-    .style('font-size', fontSize)
+  parentGEl
+    .append('g')
+    .selectAll('polyline')
+    .data(dataReady)
+    .enter()
+    .append('polyline')
 
 };
 
