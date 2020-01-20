@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useRef } from 'react';
-import d3Extends, { ITimelineConfig } from './../lib';
+import d3Extends, { ITimelineConfig } from './../../lib';
 
 interface ITimelineProps {}
 

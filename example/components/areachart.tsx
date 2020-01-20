@@ -1,5 +1,5 @@
 import React, { FC, useRef, useEffect } from 'react';
-import d3Extend, { IAreachartConfig } from './../lib';
+import d3Extend, { IAreachartConfig } from '../../lib';
 
 interface IAreachartProps {}
 

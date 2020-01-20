@@ -1,5 +1,5 @@
 import React, { FC, useRef, useEffect } from 'react';
-import d3Extend, { IHalfPiechartConfig } from './../lib';
+import d3Extend, { IHalfDonutchartConfig } from '../../lib';
 
 interface IHalfDonutchartProps {
   data: number;
@@ -12,14 +12,14 @@ const HalfDonutchart: FC<IHalfDonutchartProps> = ({ data, dataColor, tickSize })
   const wrapper = useRef(null);
 
   useEffect(() => {
-    const config: IHalfPiechartConfig = {
+    const config: IHalfDonutchartConfig = {
       element: wrapper.current,
       data: data,
       tickSize: tickSize,
       dataColor: dataColor,
       fontSize: '1.2rem'
     };
-    d3Extend.HalfPiechart(config);
+    d3Extend.HalfDonutchart(config);
   }, []);
 
   return (
